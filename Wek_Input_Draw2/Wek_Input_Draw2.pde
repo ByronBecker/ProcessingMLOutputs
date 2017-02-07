@@ -2,17 +2,18 @@ import oscP5.*;
 import netP5.*;
 OscP5 oscP5;
 NetAddress dest;
-int lineStatus = 1;   //initializing the line's "status"
+int lineStatus = 0;   //initializing the line's "status"
 float pos_X = 0.2;
 float pos_Y = 0.2;
 float old_X = 0.2;
 float old_Y = 0.2;
+float adjustment_factor = 1000;  // this should be equal to the screen size
 
 void setup(){
   oscP5 = new OscP5(this,12000); //listen for OSC messages on port 12000 (Wekinator default)
   dest = new NetAddress("127.0.0.1",6448); //send messages back to Wekinator on port 6448, localhost (this machine) (default)
   
-  size(700, 700);    //sets size of processing window
+  size(1000, 1000);    //sets size of processing window
   background(0);     //background black
   
 }
@@ -47,8 +48,10 @@ void draw(){
   smooth();
   
   if (lineStatus == 1) {  // if the lineStatus is 1 (i.e. output 1 sent)
-    line(pos_X*500, pos_Y*500, old_X*500, old_Y*500);
+    line(pos_X*adjustment_factor, pos_Y*adjustment_factor, old_X*adjustment_factor, old_Y*adjustment_factor);
     // pmouseX & Y are processing positions where the line is drawn, these correspond
     // to the mouseX & Y of the cursor
   }
+  
+  lineStatus = 1; // this smooths the initial loop of drawing so we don't get a line by default
 }
